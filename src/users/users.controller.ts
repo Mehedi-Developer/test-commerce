@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Controller('users')
 export class UsersController {
@@ -26,6 +27,12 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
+  @Post("login")
+  logIn( @Body() user: CreateUserDto){
+    // console.log(user);
+    return this.usersService.logIn(user)
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
@@ -38,18 +45,6 @@ export class UsersController {
 
   @Post()
   add( @Body() user: CreateUserDto ) {
-    try{
-      // console.log(user);
-      const userObj = new Users();
-      userObj.id = user.id
-      // user.id && ( userObj.id = user.id );
-      user.email && ( userObj.email = user.email );
-      user.name &&( userObj.name = user.name );
-      user.mobile && ( userObj.mobile = user.mobile );
-      return this.usersService.add(userObj);
-    }
-    catch(err){
-      console.log(err);
-    }
+    return this.usersService.add(user)
   }
 }

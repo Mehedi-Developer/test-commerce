@@ -1,5 +1,5 @@
 import { Roles } from './../../roles/entities/role.entity';
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, Index, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Users {
@@ -13,6 +13,7 @@ export class Users {
     mobile: string;
 
     @Column()
+    @Index({unique: true})
     email: string;
 
     @Column()
