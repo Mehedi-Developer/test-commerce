@@ -92,6 +92,7 @@ export class UsersService {
 
 
     // ====== Without encrypting =========
+
     // try{
     //   const loggedInUser = await this.usersRepository
     //   .createQueryBuilder("users")
@@ -113,8 +114,8 @@ export class UsersService {
     
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.usersRepository.update(id, updateUserDto);
+  update(id: number, body: UpdateUserDto) {
+    return this.usersRepository.update(id, body);
   }
 
   remove(id: number) {
