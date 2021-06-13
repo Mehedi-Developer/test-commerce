@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { Users } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -14,12 +15,14 @@ import { RolesModule } from './roles/roles.module';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'ee-commerce',
+      database: 'my-ee-commerce',
       entities: [Users, Roles],
       synchronize: true,
+      // logging:true
     }),
     UsersModule,
-    RolesModule
+    RolesModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

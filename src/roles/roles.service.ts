@@ -21,10 +21,13 @@ export class RolesService {
   }
 
   findOne(id: number) {
-    return this.rolesRepository.findOne(id);
+    const role = this.rolesRepository.findOne(id);
+    console.log(role)
+    return role;
   }
 
   update(id: number, updateRoleDto: UpdateRoleDto) {
+    // console.log(updateRoleDto);
     return this.rolesRepository.update(id, updateRoleDto);
   }
 

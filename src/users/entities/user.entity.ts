@@ -19,7 +19,7 @@ export class Users {
     @Column()
     password: string;
 
-    @ManyToMany(() => Roles)
-    @JoinTable({ name: "users-vs-roles"})
+    @ManyToMany(() => Roles,{eager:true})
+    @JoinTable({ name: "users-vs-roles" })
     roles: Roles[];
 }
