@@ -6,7 +6,10 @@ import { AppService } from './app.service';
 import { Users } from './users/entities/user.entity';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
+// import { AuthModule } from './auth/auth.module';
 import { AuthModule } from './auth/auth.module';
+// import { APP_GUARD } from '@nestjs/core';
+// import { RolesGuard } from './auth/roles.guard';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -22,9 +25,12 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     RolesModule,
-    AuthModule
+    AuthModule,
+    // AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule {}

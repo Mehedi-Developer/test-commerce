@@ -1,12 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login-dto';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Roles } from 'src/auth/roles.decorators';
+import { Role } from 'src/auth/roles.enum';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { SetMetadata } from '@nestjs/common';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+
+// @UseGuards(JwtAuthGuard)
+// @UseGuards(RolesGuard)
+@ApiBearerAuth()
 @Controller('user')
 export class UsersController {
   constructor(
@@ -21,11 +32,19 @@ export class UsersController {
 
   @ApiTags("CRUD-OPERATION-IN-USER")
   @ApiOperation({summary: "Find All Users"})
+  // RolesGuard Use Na korleo RolesGuard Interface e jay...keno...?
   @Get("all")
+  // @SetMetadata("roles", "admin")
+  // Ekadhik Role hole kivabe call hobe....?
+  @Roles(Role.Client)
+  // @UseGuards(RolesGuard)
   findAll() {
+    // console.log({user});
     return this.usersService.findAll();
   }
 
+  // @UseGuards(LocalAuthGuard)
+ 
   @ApiTags("CRUD-OPERATION-IN-USER")
   @ApiOperation({summary: "Find A User By Id"})
   @Get(':id')
@@ -58,7 +77,7 @@ export class UsersController {
   }
   
   @ApiTags("Registration")
-  @ApiOperation({summary: "User Sign Up"})
+  @ApiOperation({summary: `User Sign Up Where Finding User-Roles By Number Element Like "roles": [1, 2, 3, ...] From Role Repo.`})
   @Post("sign-up")
   add( @Body() user: CreateUserDto ) {
     return this.usersService.add(user);

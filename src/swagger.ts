@@ -9,6 +9,7 @@ export function setupSwagger(app: INestApplication): void {
     .addTag("CRUD-Operation")
     .addTag("User-Login")
     .addTag("Registration")
+    .addBearerAuth()
     .build();
 
     const document = SwaggerModule.createDocument(app, options);

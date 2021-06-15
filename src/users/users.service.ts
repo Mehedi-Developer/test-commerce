@@ -9,6 +9,7 @@ import { error } from 'console';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login-dto';
 
+export type User = any;
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,34 @@ export class UsersService {
     @InjectRepository(Roles)
     private rolesRepository: Repository<Roles>
   ) { }
+
+  // Auth Start...
+  // private readonly myUser = [
+  //   {
+  //     userId: 1,
+  //     username: 'john',
+  //     password: 'changeme',
+  //   },
+  //   {
+  //     userId: 2,
+  //     username: 'maria',
+  //     password: 'guess',
+  //   }
+  // ]
+  
+
+  async findOneAuth(userEmail: string): Promise<User | undefined> {
+    // return this.myUser.find(user => user.username === username);
+    const loggedInUser = await this.usersRepository
+        .createQueryBuilder("users")
+        .leftJoinAndSelect("users.roles", "roles")
+        // .select(["users"])
+        .where({ email: userEmail })
+        .getOne();
+    return loggedInUser;
+  }
+
+  // End Auth...
 
   create(createUserDto: CreateUserDto) {
     return 'This action adds a new user';
@@ -144,8 +173,8 @@ export class UsersService {
       // .execute();
 
       // console.log(body)
-      this.usersRepository.update(id, updateUserBody);
-      if(body.roles.length > 0){
+      updateUserBody && (this.usersRepository.update(id, updateUserBody))
+      if(body.roles && body.roles.length > 0){
         body.roles.map( role => {
           return this.rolesRepository.update(role.id, role);
         })
