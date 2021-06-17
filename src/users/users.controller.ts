@@ -13,9 +13,9 @@ import { Role } from 'src/auth/roles.enum';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { SetMetadata } from '@nestjs/common';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
+// @UseGuards(JwtAuthGuard, RolesGuard)
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 // @UseGuards(RolesGuard)
 @ApiBearerAuth()
 @Controller('user')
@@ -25,10 +25,10 @@ export class UsersController {
     
   ) {}
 
-  // @Post()
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.usersService.create(createUserDto);
-  // }
+  @Post("create")
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.usersService.create(createUserDto);
+  }
 
   @ApiTags("CRUD-OPERATION-IN-USER")
   @ApiOperation({summary: "Find All Users"})
@@ -37,7 +37,7 @@ export class UsersController {
   // @SetMetadata("roles", "admin")
   // Ekadhik Role hole kivabe call hobe....?
   @Roles(Role.Client)
-  // @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   findAll() {
     // console.log({user});
     return this.usersService.findAll();
@@ -80,6 +80,7 @@ export class UsersController {
   @ApiOperation({summary: `User Sign Up Where Finding User-Roles By Number Element Like "roles": [1, 2, 3, ...] From Role Repo.`})
   @Post("sign-up")
   add( @Body() user: CreateUserDto ) {
+    // console.log(user)
     return this.usersService.add(user);
   }
 }

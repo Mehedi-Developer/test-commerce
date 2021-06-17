@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext, Inject, forwardRef } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
+import { resolve } from "path";
 import { Observable } from "rxjs";
 import { ROLES_KEY } from "./roles.decorators";
 
@@ -19,7 +20,12 @@ import { ROLES_KEY } from "./roles.decorators";
 //         }
 
 //         const request = context.switchToHttp().getRequest();
-//         const user = request.user;
+//         const user = request?.user;
+
+//         console.log("check user: ", user);
+
+//         const userRole = user.roles[0];
+//         console.log(userRole)
 
 //         const hasRole = () => {
 //           return roles.map((rRole) => {
@@ -85,20 +91,27 @@ export class RolesGuard implements CanActivate {
 async function validateRequest(request: any, requiredRoles: any){
   const user = await request?.user;
   // console.log("req===",request)
-  // console.log("user ===== ",user)
+  console.log("user ===== ",user)
   const roles = user?.roles;
-  // console.log("roles === ", roles)
-  const flag = requiredRoles.map((rRole) => {
+  console.log("roles === ", roles)
+  
+  const flag = await requiredRoles.map( (rRole) => {
     // console.log({rRole},"\n",roles);
     return roles?.find((role) => {
       return role?.type == rRole
     }) ? true : false;
+    
     // return roles?.type?.includes(role)
   });
-  console.log(flag[0])
+  // console.log(flag[0])
   // return flag[0];
-
-  // console.log("flag === ", flag[0])
+  console.log("flag === ", flag[0])
+  return true;
+  // return new Promise<boolean>((resolve, reject) => {
+  //   // resolve(flag[0]);
+  //   resolve(true);
+  // });
+  // resolve();
   if(flag[0]){
     return true;
   }
